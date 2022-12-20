@@ -4,7 +4,6 @@ import { galleryItems } from './gallery-items.js';
 const galleryRef = document.querySelector('.gallery');
 
 const markup = galleryMarkup();
-let instanceWindowModal;
 
 galleryRef.insertAdjacentHTML('beforeend', markup);
 
@@ -42,13 +41,13 @@ function onPictureClick(evt) {
 }
 
 function openPictureInModalWindow(src) {
-  instanceWindowModal = basicLightbox.create(
+  const instanceWindowModal = basicLightbox.create(
     `
         <img src="${src}" width="800" height="600">
     `,
     {
-      onShow: () => window.addEventListener('keydown', onPressEsc),
-      onClose: () => window.removeEventListener('keydown', onPressEsc),
+      onShow: () => window.addEventListener('keydown', onPressEsc.bind(instanceWindowModal)),
+      onClose: () => window.removeEventListener('keydown', onPressEsc.bind(instanceWindowModal)),
     },
   );
 
@@ -57,6 +56,6 @@ function openPictureInModalWindow(src) {
 
 function onPressEsc(evt) {
   if (evt.code === 'Escape') {
-    instanceWindowModal.close();
+    this.close();
   }
 }
